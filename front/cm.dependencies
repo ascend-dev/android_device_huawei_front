@@ -1,0 +1,7 @@
+[
+ {
+   "repository": "android_kernel_huawei_front",
+   "target_path": "kernel/huawei/front",
+   "branch": "jellybean"
+ }
+]

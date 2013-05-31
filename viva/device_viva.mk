@@ -57,6 +57,8 @@ PRODUCT_COPY_FILES += \
 	device/huawei/viva/ramdisk/init.rc:root/init.rc \
 	device/huawei/viva/ramdisk/init.viva.rc:root/init.viva.rc \
 	device/huawei/viva/ramdisk/init.viva.usb.rc:root/init.viva.usb.rc \
+	device/huawei/viva/ramdisk/default.prop:root/default.prop \
+	device/huawei/viva/ramdisk/ueventd.rc:root/ueventd.rc \
 	device/huawei/viva/ramdisk/ueventd.viva.rc:root/ueventd.viva.rc
 
 # Media / Audio

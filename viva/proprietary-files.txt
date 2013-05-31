@@ -61,7 +61,6 @@ lib/libmm_osal.so
 lib/libOMX.TI.DUCATI1.MISC.SAMPLE.so
 lib/libdomx.so
 lib/libexif.so
-lib/libbluetoothd.so
 lib/libaudience.so
 lib/hw/audio.primary.default.so
 lib/hw/audio.hdmi.omap4.so
