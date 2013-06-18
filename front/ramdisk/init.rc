@@ -631,7 +631,6 @@ service netd /system/bin/netd
 service debuggerd /system/bin/debuggerd
     class main
 
-
 service ril-daemon /system/bin/rild -l /system/lib/libxgold-ril.so -- -d /dev/xmd-tty0
     class main
     socket rild stream 660 root radio
@@ -708,10 +707,12 @@ service dumpstate /system/bin/dumpstate -s
     socket dumpstate stream 0660 shell log
     disabled
     oneshot
+
 service akmd8975  /system/bin/akmd8975 -m 3
     class main
     user system
     oneshot
+
 service sshd /system/bin/start-ssh
     class main
     disabled
@@ -730,15 +731,13 @@ service mdnsd /system/bin/mdnsd
     oneshot
 
 
-
-
-
-
 on property:ro.service.systemstattool=true
     start systemstattool
+
 on property:service.adb.tcp.port=5555
     stop adbd
     start adbd
+
 on property:service.adb.tcp.port=-1
     stop adbd
     start adbd

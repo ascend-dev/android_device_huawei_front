@@ -25,7 +25,9 @@
 /dev/light    	 	  0660   system     system
 #DTS2011120302674    z00190171   2011/12/03   modify for sensors update version.I end
 
-
+# for usb printer
+/dev/bus/usb/*         0660        system        usb
+/dev/usb/lp*           0660        system        usb
 #DTS2011122204129    m00109739   2011/12/22  modify for dynamic gamma begin
 #for lcd_tuning
 /dev/pri_lcd              0666   system     system
