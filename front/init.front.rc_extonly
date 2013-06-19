@@ -37,20 +37,17 @@ on early-init
 # add symlink for HDCP key
         symlink /factory/hdcp.keys /system/vendor/firmware/hdcp.keys
 
-
 on post-fs-data
 
         mkdir /data/share 0775 media_rw media_rw
+        mkdir /data/media 0775 media_rw media_rw
         chown media_rw media_rw /data/share
         mkdir /data/smc 0770 drmrpc drmrpc
         chown drmrpc drmrpc /data/smc/counter.bin
         chown drmrpc drmrpc /data/smc/storage.bin
         chown drmrpc drmrpc /data/smc/system.bin
 
-
 	setprop vold.post_fs_data_done 1
-
-
 
     chown system system /sys/class/android_usb/android0/f_mass_storage/lun/file
     chmod 0660 /sys/class/android_usb/android0/f_mass_storage/lun/file
@@ -197,8 +194,6 @@ chmod 0660 /dev/block/platform/omap/omap_hsmmc.1/by-name/oeminfo
 #DTS2012011200528 l00178492 2012-1-12 end <<<
 
 
-
-
 on boot
 	mount debugfs /sys/kernel/debug /sys/kernel/debug
 	chmod 0666 /dev/pvrsrvkm
@@ -220,8 +215,6 @@ on boot
 # autosuspend root hubs immediatly after attached devices
 	write /sys/bus/usb/devices/usb1/power/autosuspend_delay_ms 0
 	write /sys/bus/usb/devices/usb2/power/autosuspend_delay_ms 0
-
-
 
     mkdir /data/misc/wifi 0770 wifi wifi
     chown wifi wifi /data/misc/wifi
@@ -301,6 +294,7 @@ on fs
 # here when adbd sets the service.adb.root property to 1.  We also restart adbd here
 # rather than waiting for init to notice its death and restarting it so the timing
 # of USB resetting and adb restarting more closely matches the previous behavior.
+
     write /sys/class/android_usb/android0/enable 0
     restart adbd
     write /sys/class/android_usb/android0/enable 1
@@ -479,6 +473,7 @@ service smc_pa /system/bin/smc_pa_ctrl \
     user root
     group root
     oneshot
+
 service bugreport /system/bin/bugmailer.sh -v
 	class main
 	disabled
@@ -550,6 +545,7 @@ service iprenew_bnep0 /system/bin/dhcpcd -n
         class main
         disabled
         oneshot
+
 service rillogcat /system/bin/logcat -b radio -v time -r 4096 -n 10 -f /data/android_logs/rillogcat-log
     class logcat
     user root
@@ -622,6 +618,7 @@ service chip_power_off /system/bin/sh /system/etc/bluetooth/init.bcm.chip_off.sh
     group system
     disabled
     oneshot
+
 service dhcpcd_brcm-pan /system/bin/dhcpcd -ABKL
 	class main
 	disabled
@@ -637,17 +634,20 @@ service btld /system/bin/logwrapper /system/bin/btld -lpm 1 -hb 3000000 -snr 8
     group bluetooth net_bt_admin
     disabled
     oneshot
+
 on property:service.brcm.bt.soft_onoff=1
     start btld
 
 on property:service.brcm.bt.soft_onoff=0
     stop btld
+
 service bluetoothd /system/bin/logwrapper /system/bin/bluetoothd -d -n
     class main
     socket bluetooth stream 660 bluetooth bluetooth
     socket dbus_bluetooth stream 660 bluetooth bluetooth
    group bluetooth net_bt_admin misc
     disabled
+
 #DTS2012011707420 z00183953 2012
 service kbtld /system/bin/sh /system/etc/bluetooth/kill-btld.sh
 	user root
@@ -660,7 +660,6 @@ service kbluetoothd /system/bin/sh /system/etc/bluetooth/kill-bluetoothd.sh
 	group system bluetooth
 	disabled
 	oneshot
-
 
 service nvm-server /system/bin/nvm_server
     class main
@@ -678,12 +677,9 @@ service iprenew_brcm-pan /system/bin/dhcpcd -n
 	disabled
 	oneshot
 
-
-
 service atcmdserver  /system/bin/atcmdserver
     class main
     user root
     oneshot
-
 
 

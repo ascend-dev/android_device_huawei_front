@@ -9,27 +9,32 @@ on early-init
     mkdir /mnt 0775 root system
     mkdir /storage 0050 root sdcard_r
 
-
-    # Primary is MicroSD
-    export EXTERNAL_STORAGE /storage/sdcard0
+    # MicroSD on /storage/sdcard0
     mkdir /storage/sdcard0 0000 system system
-    symlink /storage/sdcard0 /sdcard
-    symlink /storage/sdcard0 /mnt/sdcard
 
-    # Secondary is internal 
+    # Internal storage on /storage/sdcard1 
     mkdir /mnt/shell 0755 shell shell
     mkdir /mnt/shell/emulated 0777 shell shell
     mkdir /storage/emulated 0555 root root
 
-    export SECONDARY_STORAGE /storage/sdcard1
-    #export EMULATED_STORAGE_SOURCE /mnt/shell/emulated
-    #export EMULATED_STORAGE_TARGET /storage/emulated
+    symlink /mnt/shell/emulated/0 /mnt/internal
+    symlink /mnt/shell/emulated/0 /storage/sdcard1
+    symlink /mnt/shell/emulated/0 /storage/emulated/legacy
 
-    symlink /mnt/shell/emulated /mnt/internal
-    symlink /mnt/shell/emulated /storage/sdcard1
-    symlink /mnt/shell/emulated /storage/emulated/legacy
-
+    # OTG
     mkdir /storage/usb-ext 0777 sdcard_rw sdcard_rw
+    
+    # pri/sec storage
+    export EXTERNAL_STORAGE /storage/sdcard0
+    export SECONDARY_STORAGE /storage/sdcard1
+    symlink /storage/sdcard0 /sdcard
+    symlink /storage/sdcard0 /mnt/sdcard
+
+    # sec/pri storage
+    # export EXTERNAL_STORAGE /storage/sdcard1
+    # export SECONDARY_STORAGE /storage/sdcard0
+    # symlink /mnt/shell/emulated/0 /sdcard
+    # symlink /mnt/shell/emulated/0 /mnt/sdcard
 
 
 # change permissions for ION driver
@@ -47,6 +52,8 @@ on post-fs-data
         mkdir /data/share 0775 media_rw media_rw
         mkdir /data/media 0775 media_rw media_rw
         chown media_rw media_rw /data/share
+        mkdir /data/share/0 0775 media_rw media_rw
+        chown media_rw media_rw /data/share/0
         mkdir /data/smc 0770 drmrpc drmrpc
         chown drmrpc drmrpc /data/smc/counter.bin
         chown drmrpc drmrpc /data/smc/storage.bin
