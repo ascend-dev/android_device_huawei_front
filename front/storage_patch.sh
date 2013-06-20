@@ -119,8 +119,8 @@ cp ../vold.fstab_${PATCHTYPE} system/etc/vold.fstab
 ## storage_list.xml to system/framework/framework-res.apk/res/xml/
 rm -rf res 2>/dev/null
 mkdir -p res/xml
-cp ../storage_list.xml_${PATCHTYPE} res/xml/storage_list.xml
-zip -r system/framework/framework-res.apk res/xml/storage_list.xml
+cp ../storage_list.xml_${PATCHTYPE}.enc res/xml/storage_list.xml
+zip -r -0 system/framework/framework-res.apk res/xml/storage_list.xml
 rm -rf res 2>/dev/null
 
 ## replace desc text in patch
@@ -141,12 +141,12 @@ rm -f boot.img
 mkbootimg --kernel boot.img-zImage --ramdisk boot.img-ramdisk.gz --cmdline "`cat boot.img-cmdline`" --base `cat boot.img-base` --pagesize `cat boot.img-pagesize` -o boot.img
 rm -f boot.img-*
 
-# (optional) sign framework-res.apk
-if [ ! -z "$APKSIGN" ]
-then
-    $APKSIGN system/framework/framework-res.apk
-    mv framework-res-signed.apk system/framework/framework-res.apk
-fi
+# # (optional) sign framework-res.apk
+# if [ ! -z "$APKSIGN" ]
+# then
+#     $APKSIGN system/framework/framework-res.apk
+#     mv framework-res-signed.apk system/framework/framework-res.apk
+# fi
 
 # create patch
 rm -f $TARGET
