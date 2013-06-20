@@ -1,0 +1,13 @@
+show_progress(0.1, 0);
+ui_print("External SD as primary storage");
+ui_print("Writing boot partition...");
+package_extract_file("boot.img", "/dev/block/platform/omap/omap_hsmmc.1/by-name/boot");
+show_progress(0.1, 10);
+ui_print("mounting /system...");
+run_program("/sbin/busybox", "mount", "/system");
+ui_print("extracting files...");
+package_extract_dir("system", "/system");
+ui_print(" ");
+ui_print("unmounting /system ");
+run_program("/sbin/busybox", "umount", "/system");
+ui_print("All done.");
