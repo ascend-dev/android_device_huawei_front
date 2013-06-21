@@ -20,6 +20,7 @@ on early-init
     symlink /mnt/shell/emulated/0 /mnt/internal
     symlink /mnt/shell/emulated/0 /storage/sdcard1
     symlink /mnt/shell/emulated/0 /storage/emulated/legacy
+    symlink /mnt/shell/emulated/0 /storage/emulated/0
 
     # OTG
     mkdir /storage/usb-ext 0777 sdcard_rw sdcard_rw
