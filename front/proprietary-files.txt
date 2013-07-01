@@ -62,6 +62,8 @@ lib/libOMX.TI.DUCATI1.MISC.SAMPLE.so
 lib/libdomx.so
 lib/libexif.so
 lib/libaudience.so
+lib/hw/audio.a2dp.default.so
+lib/hw/audio_policy.default.so
 lib/hw/audio.primary.default.so
 lib/hw/audio.hdmi.omap4.so
 lib/hw/sensors.omap4.so
