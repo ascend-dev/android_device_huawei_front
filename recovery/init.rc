@@ -35,7 +35,7 @@ on init
     write /sys/class/android_usb/android0/iManufacturer huawei
     write /sys/class/android_usb/android0/iProduct U9500
     write /sys/class/android_usb/android0/iSerial cleanup 
-    write /sys/class/android_usb/android0/functions mass_storage,adb,diag
+    write /sys/class/android_usb/android0/functions mass_storage,adb
     write /sys/class/android_usb/android0/enable 1
 
 

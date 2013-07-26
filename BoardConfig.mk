@@ -132,18 +132,20 @@ BOARD_FLASH_BLOCK_SIZE := 4096
 BOARD_USES_SECURE_SERVICES := true
 
 # Recovery
+RECOVERY_CHARGEMODE := true
 BOARD_USES_MMCUTILS := true
 BOARD_HAS_NO_SELECT_BUTTON := true
-# BOARD_USE_CUSTOM_RECOVERY_FONT := \"roboto_15x24.h\"
+BOARD_USE_CUSTOM_RECOVERY_FONT := \"roboto_23x41.h\"
 BOARD_UMS_LUNFILE := "/sys/class/android_usb/f_mass_storage/lun/file"
 TARGET_USE_CUSTOM_LUN_FILE_PATH := "/sys/class/android_usb/f_mass_storage/lun/file"
 TARGET_RECOVERY_INITRC := device/huawei/front/recovery/init.rc
+TARGET_PREBUILT_RECOVERY_KERNEL := device/huawei/front/recovery_kernel
 
 #TWRP
 #TARGET_RECOVERY_PIXEL_FORMAT := "RGBX_8888"
 DEVICE_RESOLUTION := 720x1280
 RECOVERY_GRAPHICS_USE_LINELENGTH := true
-TARGET_RECOVERY_INITRC := device/huawei/front/recovery/init.twrp.rc
+#TARGET_RECOVERY_INITRC := device/huawei/front/recovery/init.twrp.rc
 RECOVERY_SDCARD_ON_DATA := true
 TW_INTERNAL_STORAGE_PATH := "/data/media"
 TW_INTERNAL_STORAGE_MOUNT_POINT := "data"
