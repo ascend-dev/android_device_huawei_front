@@ -1,0 +1,145 @@
+From 549d33a6973c05902749d10770bd6d8f4f9eb8da Mon Sep 17 00:00:00 2001
+From: huangqiwu <huangqiwu@xiaomi.com>
+Date: Fri, 26 Jul 2013 11:10:21 +0800
+Subject: [PATCH] Add Support offline charge mode for huawei device
+
+Change-Id: Id8ea8e79fec3e47da3038e53e0a89bf22da83c77
+---
+ Android.mk            |  2 +-
+ default_recovery_ui.c |  1 +
+ recovery.c            | 66 ++++++++++++++++++++++++++++++++++++++++++++++++++-
+ 3 files changed, 67 insertions(+), 2 deletions(-)
+
+diff --git a/Android.mk b/Android.mk
+index 2e0966f..2628eb5 100644
+--- a/Android.mk
++++ b/Android.mk
+@@ -59,7 +59,7 @@ BOARD_RECOVERY_CHAR_HEIGHT := $(shell echo $(BOARD_USE_CUSTOM_RECOVERY_FONT) | c
+ 
+ LOCAL_CFLAGS += -DBOARD_RECOVERY_CHAR_WIDTH=$(BOARD_RECOVERY_CHAR_WIDTH) -DBOARD_RECOVERY_CHAR_HEIGHT=$(BOARD_RECOVERY_CHAR_HEIGHT)
+ 
+-BOARD_RECOVERY_DEFINES := BOARD_HAS_NO_SELECT_BUTTON BOARD_UMS_LUNFILE BOARD_RECOVERY_ALWAYS_WIPES BOARD_RECOVERY_HANDLES_MOUNT BOARD_TOUCH_RECOVERY RECOVERY_EXTEND_NANDROID_MENU TARGET_USE_CUSTOM_LUN_FILE_PATH TARGET_DEVICE
++BOARD_RECOVERY_DEFINES := RECOVERY_CHARGEMODE BOARD_HAS_NO_SELECT_BUTTON BOARD_UMS_LUNFILE BOARD_RECOVERY_ALWAYS_WIPES BOARD_RECOVERY_HANDLES_MOUNT BOARD_TOUCH_RECOVERY RECOVERY_EXTEND_NANDROID_MENU TARGET_USE_CUSTOM_LUN_FILE_PATH TARGET_DEVICE
+ 
+ $(foreach board_define,$(BOARD_RECOVERY_DEFINES), \
+   $(if $($(board_define)), \
+diff --git a/default_recovery_ui.c b/default_recovery_ui.c
+index 032c1b3..631902d 100644
+--- a/default_recovery_ui.c
++++ b/default_recovery_ui.c
+@@ -29,6 +29,7 @@ char* MENU_ITEMS[] = { "reboot system now",
+                        "backup and restore",
+                        "mounts and storage",
+                        "advanced",
++                       "power off",
+                        NULL };
+ 
+ void device_ui_init(UIParameters* ui_parameters) {
+diff --git a/recovery.c b/recovery.c
+index 8cfaa73..efa5ccf 100644
+--- a/recovery.c
++++ b/recovery.c
+@@ -35,6 +35,7 @@
+ #include "common.h"
+ #include "cutils/properties.h"
+ #include "cutils/android_reboot.h"
++#include <sys/reboot.h>
+ #include "install.h"
+ #include "minui/minui.h"
+ #include "minzip/DirUtil.h"
+@@ -151,6 +152,52 @@ fopen_path(const char *path, const char *mode) {
+     if (fp == NULL && path != COMMAND_FILE) LOGE("Can't open %s\n", path);
+     return fp;
+ }
++#ifdef RECOVERY_CHARGEMODE
++void handle_chargemode() {
++    const char* filename = "/proc/cmdline";
++    struct stat file_info;
++    if (0 != stat(filename, &file_info))
++        return;
++    int file_len = file_info.st_size;
++    char* file_data = (char*)malloc(file_len + 1);
++    FILE *file = fopen(filename, "rb");
++    if (file == NULL)
++        return;
++    fread(file_data, file_len, 1, file);
++    file_data[file_len] = '\0';
++    fclose(file);
++    if (strstr(file_data, "androidboot.mode=offmode_charging") != NULL)
++        reboot(RB_POWER_OFF);
++}
++
++int get_chargemode() {
++    char buffer[1024], *p, *q;
++    int len;
++    int fd = open("/proc/app_info",O_RDONLY);
++    int flag = 0;
++    LOGI("get_chargemode.\n");
++        if (fd < 0) {
++        LOGE("could not open /proc/app_info:%s", strerror(errno));
++        }
++        do {
++            len = read(fd,buffer,sizeof(buffer)); }
++        while (len == -1 && errno == EINTR);
++
++    if (len < 0) {
++        LOGE("could not read /proc/app_info:%s", strerror(errno));
++        close(fd);
++    }
++    close(fd);
++	char * charge;
++	charge = strstr(buffer, "charge_flag");
++    LOGI("=QIWU=Charge Flag: %c\n", charge[13]);
++	if((int)charge[13] == 49 ){	
++		LOGI("=QIWU=Charge Flag: %c", charge[13]);
++		flag = 1;
++    }
++	return flag;
++}
++#endif
+ 
+ // close a file, log an error if the error indicator is set
+ static void
+@@ -841,6 +888,11 @@ main(int argc, char **argv) {
+             return getprop_main(argc, argv);
+         return busybox_driver(argc, argv);
+     }
++
++#ifdef RECOVERY_CHARGEMODE
++    handle_chargemode();
++#endif
++
+     __system("/sbin/postrecoveryboot.sh");
+ 
+     int is_user_initiated_recovery = 0;
+@@ -851,6 +903,15 @@ main(int argc, char **argv) {
+     freopen(TEMPORARY_LOG_FILE, "a", stderr); setbuf(stderr, NULL);
+     printf("Starting recovery on %s", ctime(&start));
+ 
++#ifdef RECOVERY_CHARGEMODE
++    int flag;
++    flag = get_chargemode();
++
++    if(flag == 1){
++        __system("charge");
++    }else {
++#endif
++
+     device_ui_init(&ui_parameters);
+     ui_init();
+     ui_print(EXPAND(RECOVERY_VERSION)"\n");
+@@ -1001,7 +1062,10 @@ main(int argc, char **argv) {
+     }
+     return EXIT_SUCCESS;
+ }
+-
++#ifdef RECOVERY_CHARGEMODE
++	return 0;
++}
++#endif
+ int get_allow_toggle_display() {
+     return allow_display_toggle;
+ }
+-- 
+1.8.1.2
+
