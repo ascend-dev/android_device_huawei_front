@@ -9,4 +9,3 @@
 /bootloader	emmc		/dev/block/platform/omap/omap_hsmmc.1/by-name/bootloader
 /xloader	emmc		/dev/block/platform/omap/omap_hsmmc.1/by-name/xloader
 /cust		ext4		/dev/block/platform/omap/omap_hsmmc.1/by-name/cust
-/data/share     datamedia	/dev/null
