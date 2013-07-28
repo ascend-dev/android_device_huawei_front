@@ -59,7 +59,8 @@ PRODUCT_COPY_FILES += \
 	device/huawei/front/ramdisk/init.front.usb.rc:root/init.front.usb.rc \
 	device/huawei/front/ramdisk/ueventd.rc:root/ueventd.rc \
 	device/huawei/front/ramdisk/ueventd.front.rc:root/ueventd.front.rc \
-	device/huawei/front/ramdisk/default.prop:root/default.prop
+	device/huawei/front/ramdisk/default.prop:root/default.prop \
+	device/huawei/front/ramdisk/fstab.front:root/fstab.front
 
 # Media / Audio
 PRODUCT_COPY_FILES += \
