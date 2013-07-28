@@ -38,7 +38,7 @@ $(SYMLINKS): $(LOCAL_INSTALLED_MODULE) $(LOCAL_PATH)/Android.mk
 	@mkdir -p $(dir $@)
 	@rm -rf $@
 	$(hide) ln -fs $(TICPU_BINARY) $@
-	@cp -afr /source/cm-10.2/device/huawei/front/bltsville/ticpu/lib/android/libbltsville_ticpu_license.txt $(TARGET_OUT_VENDOR)/lib
+	@cp -afr $(LOCAL_PATH)/lib/android/libbltsville_ticpu_license.txt $(TARGET_OUT_VENDOR)/lib
 ALL_DEFAULT_INSTALLED_MODULES += $(SYMLINKS)
 
 SYMLINKS1 := $(TARGET_OUT_VENDOR)/lib/libbltsville_cpu.so
