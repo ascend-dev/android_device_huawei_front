@@ -1,0 +1,26 @@
+From efafdedc6dec9e785e1a7a470405d8412f3f658b Mon Sep 17 00:00:00 2001
+From: huangqiwu <huangqiwu@xiaomi.com>
+Date: Sun, 28 Jul 2013 10:36:32 +0800
+Subject: [PATCH] libcameraservice:Fix build errors
+
+Change-Id: Ie106d5b4f745f2d8973d3b6dee2bd57e11ffe678
+---
+ services/camera/libcameraservice/CameraClient.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/services/camera/libcameraservice/CameraClient.cpp b/services/camera/libcameraservice/CameraClient.cpp
+index 5cf8c0e..8cf20fe 100644
+--- a/services/camera/libcameraservice/CameraClient.cpp
++++ b/services/camera/libcameraservice/CameraClient.cpp
+@@ -939,7 +939,7 @@ void CameraClient::handleCompressedBurstPicture(const sp<IMemory>& mem) {
+     // get called only once. When burst finishes this message will get automatically
+     // disabled in the respective call for restarting the preview.
+ 
+-    sp<ICameraClient> c = mCameraClient;
++    sp<ICameraClient> c = mRemoteCallback;
+     mLock.unlock();
+     if (c != 0) {
+         c->dataCallback(CAMERA_MSG_COMPRESSED_IMAGE, mem, NULL);
+-- 
+1.8.1.2
+
