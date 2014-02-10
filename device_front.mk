@@ -82,6 +82,10 @@ PRODUCT_COPY_FILES += \
 	device/huawei/front/bluetooth/input.conf:system/etc/bluetooth/input.conf \
 	device/huawei/front/bluetooth/network.conf:system/etc/bluetooth/network.conf
 
+# Wi-Fi
+PRODUCT_COPY_FILES += \
+	device/huawei/front/config/wpa_supplicant_overlay.conf:system/etc/wifi/wpa_supplicant_overlay.conf
+
 # Torch
 PRODUCT_PACKAGES += \
         Torch
