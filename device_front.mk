@@ -31,10 +31,6 @@ DEVICE_FOLDER := device/huawei/front
 
 DEVICE_PACKAGE_OVERLAYS := device/huawei/front/overlay
 
-#Camera
-PRODUCT_PACKAGES += \
-        Camera
-
 # Audio Packages
 PRODUCT_PACKAGES += \
 	audio.a2dp.default \
