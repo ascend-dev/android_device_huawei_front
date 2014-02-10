@@ -142,6 +142,8 @@ BOARD_UMS_LUNFILE := "/sys/class/android_usb/f_mass_storage/lun/file"
 TARGET_USE_CUSTOM_LUN_FILE_PATH := "/sys/class/android_usb/f_mass_storage/lun/file"
 TARGET_RECOVERY_INITRC := device/huawei/front/recovery/init.rc
 TARGET_PREBUILT_RECOVERY_KERNEL := device/huawei/front/recovery_kernel
+TARGET_RECOVERY_FSTAB := device/huawei/front/ramdisk/fstab.front
+RECOVERY_FSTAB_VERSION := 2
 
 #TWRP
 #TARGET_RECOVERY_PIXEL_FORMAT := "RGBX_8888"

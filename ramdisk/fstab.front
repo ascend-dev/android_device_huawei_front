@@ -1,12 +1,12 @@
 # version 2
 # device        mount_point     fs_type        mount_flags       fs_mgr_flags
 /dev/block/platform/omap/omap_hsmmc.1/by-name/system      /system      ext4  ro                                                                                       wait
-/dev/block/platform/omap/omap_hsmmc.1/by-name/cache       /cache       ext4  noatime nosuid nodev nomblk_io_submit                                                    wait,check
-/dev/block/platform/omap/omap_hsmmc.1/by-name/userdata    /data        ext4  nosuid nodev mblk_io_submit,data=writeback,commit=15,barrier=0,noauto_da_alloc,discard   wait,check
+/dev/block/platform/omap/omap_hsmmc.1/by-name/cache       /cache       ext4  noatime,nosuid,nodev,data=ordered,noauto_da_alloc                                        wait,check
+/dev/block/platform/omap/omap_hsmmc.1/by-name/userdata    /data        ext4  noatime,nosuid,nodev,data=ordered,noauto_da_alloc                                        wait,check
 /dev/block/platform/omap/omap_hsmmc.1/by-name/cust        /cust        ext4  ro                                                                                       wait
 /dev/block/platform/omap/omap_hsmmc.1/by-name/misc        /misc        emmc  defaults  none
-/dev/block/platform/omap/omap_hsmmc.1/by-name/boot        /boot        emmc  defaults  none
-/dev/block/platform/omap/omap_hsmmc.1/by-name/recovery    /recovery    emmc  defaults  none
+/dev/block/platform/omap/omap_hsmmc.1/by-name/boot        /boot        emmc  defaults  recoveryonly
+/dev/block/platform/omap/omap_hsmmc.1/by-name/recovery    /recovery    emmc  defaults  recoveryonly
 /dev/block/platform/omap/omap_hsmmc.1/by-name/bootloader  /bootloader  emmc  defaults  none
 /dev/block/platform/omap/omap_hsmmc.1/by-name/xloader     /xloader     emmc  defaults  none
 
