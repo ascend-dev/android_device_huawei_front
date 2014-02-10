@@ -22,6 +22,7 @@ $(call inherit-product, hardware/ti/omap4xxx/omap4.mk)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
 $(call inherit-product, frameworks/native/build/phone-xhdpi-1024-dalvik-heap.mk)
 
+DEVICE_FOLDER := device/huawei/front
 
 # This file includes all definitions that apply to ALL front devices, and
 # are also specific to front devices

@@ -45,10 +45,10 @@ LOCAL_CFLAGS :=
 LOCAL_C_INCLUDES := \
 	$(LOCAL_PATH)/mirror \
 	$(LOCAL_PATH)/mirror/include \
-	$(LOCAL_PATH)/../bltsville/include \
-	$(LOCAL_PATH)/../ocd/include
+	$(DEVICE_FOLDER)/bltsville/bltsville/include \
+	$(DEVICE_FOLDER)/bltsville/ocd/include
 
-VERSION_H := $(LOCAL_PATH)/version.h
+VERSION_H := $(DEVICE_FOLDER)/bltsville/gcbv/version.h
 BV_VERSION := $(shell grep "VER_FILEVERSION_STR" $(VERSION_H) | sed "s,.*\"\([0-9.]*\)\\\0.*,\1,")
 
 LOCAL_SHARED_LIBRARIES := \

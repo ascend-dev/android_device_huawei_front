@@ -12,8 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# AOSP specific
-ifneq ($(TARGET_PRODUCT),full_$(TARGET_BOOTLOADER_BOARD_NAME))
+ifeq ($(TARGET_DEVICE),front)
 
 LOCAL_PATH:= $(call my-dir)
 
