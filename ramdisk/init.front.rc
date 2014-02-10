@@ -3,16 +3,16 @@ import init.front.usb.rc
 on early-init
 
 
-    # See storage config details at http://source.android.com/tech/storage/
+# See storage config details at http://source.android.com/tech/storage/
 
-    # for both internal and MicroSD
+# for both internal and MicroSD
     mkdir /mnt 0775 root system
     mkdir /storage 0050 root sdcard_r
 
-    # MicroSD on /storage/sdcard0
+# MicroSD on /storage/sdcard0
     mkdir /storage/sdcard0 0000 system system
 
-    # Internal storage on /storage/sdcard1 
+# Internal storage on /storage/sdcard1 
     mkdir /mnt/shell 0755 shell shell
     mkdir /mnt/shell/emulated 0777 shell shell
     mkdir /storage/emulated 0555 root root
@@ -22,20 +22,20 @@ on early-init
     symlink /mnt/shell/emulated/0 /storage/emulated/legacy
     symlink /mnt/shell/emulated/0 /storage/emulated/0
 
-    # OTG
+# OTG
     mkdir /storage/usb-ext 0777 sdcard_rw sdcard_rw
     
-    # pri/sec storage
+# pri/sec storage
     export EXTERNAL_STORAGE /storage/sdcard0
     export SECONDARY_STORAGE /storage/sdcard1
     symlink /storage/sdcard0 /sdcard
     symlink /storage/sdcard0 /mnt/sdcard
 
-    # sec/pri storage
-    # export EXTERNAL_STORAGE /storage/sdcard1
-    # export SECONDARY_STORAGE /storage/sdcard0
-    # symlink /mnt/shell/emulated/0 /sdcard
-    # symlink /mnt/shell/emulated/0 /mnt/sdcard
+# sec/pri storage
+#    export EXTERNAL_STORAGE /storage/sdcard1
+#    export SECONDARY_STORAGE /storage/sdcard0
+#    symlink /mnt/shell/emulated/0 /sdcard
+#    symlink /mnt/shell/emulated/0 /mnt/sdcard
 
 
 # change permissions for ION driver
@@ -46,19 +46,34 @@ on early-init
 	chmod 0775 /factory
 
 # add symlink for HDCP key
-        symlink /factory/hdcp.keys /system/vendor/firmware/hdcp.keys
+	symlink /factory/hdcp.keys /system/vendor/firmware/hdcp.keys
+
+on init
+	mkdir /cust
+# Create private mountpoint so we can MS_MOVE from staging
+    mount tmpfs tmpfs /mnt/secure mode=0700,uid=0,gid=0
+
+    write /sys/module/block2mtd/parameters/block2mtd /dev/block/platform/omap/omap_hsmmc.1/by-name/nvme
+
+    setprop ro.hwboottype boot_android
+
+on post-fs
+	mount tmpfs tmpfs /mnt/secure private rec
 
 on post-fs-data
 
-        mkdir /data/share 0775 media_rw media_rw
-        mkdir /data/media 0775 media_rw media_rw
-        chown media_rw media_rw /data/share
-        mkdir /data/share/0 0775 media_rw media_rw
-        chown media_rw media_rw /data/share/0
-        mkdir /data/smc 0770 drmrpc drmrpc
-        chown drmrpc drmrpc /data/smc/counter.bin
-        chown drmrpc drmrpc /data/smc/storage.bin
-        chown drmrpc drmrpc /data/smc/system.bin
+	mkdir /data/share 0775 media_rw media_rw
+	mkdir /data/media 0775 media_rw media_rw
+	chown media_rw media_rw /data/share
+	mkdir /data/share/0 0775 media_rw media_rw
+	chown media_rw media_rw /data/share/0
+	mkdir /data/data/.helix 0771 media media
+	mkdir /data/smc 0770 drmrpc drmrpc
+	chown drmrpc drmrpc /data/smc/counter.bin
+	chown drmrpc drmrpc /data/smc/storage.bin
+	chown drmrpc drmrpc /data/smc/system.bin
+	mkdir /data/gps
+    chown root system /data/gps
 
 	setprop vold.post_fs_data_done 1
 
@@ -81,30 +96,31 @@ on post-fs-data
     mkdir /dev/cpuctl/bg_non_interactive
     chown system system /dev/cpuctl/bg_non_interactive/tasks
     chmod 0777 /dev/cpuctl/bg_non_interactive/tasks
-    # 5.0 %
+# 5.0 %
     write /dev/cpuctl/bg_non_interactive/cpu.shares 52
 
-    #<DTS2011121404047 jKF31740 20111214 modify begin
+#<DTS2011121404047 jKF31740 20111214 modify begin
     chown system system /sys/class/backlight/lcd/brightness
-    #DTS2011121404047 jKF31740 20111214 modify end>
-    #DTS2011120302674    z00190171   2011/12/03  add for sensors update version.I begin
+#DTS2011121404047 jKF31740 20111214 modify end>
+#DTS2011120302674    z00190171   2011/12/03  add for sensors update version.I begin
     chown system system /sys/devices/platform/i2c_omap.4/i2c-4/4-0012/leds/button-backlight-tk/brightness
 	chown system system /sys/devices/platform/i2c_omap.2/i2c-2/2-0012/leds/button-backlight-tk/brightness
     chown system system /sys/devices/platform/TK-backlight/leds/button-backlight-tk/brightness
-    #DTS2011120302674    z00190171   2011/12/03  add for sensors update version.I end
-    #<DTS2011121301877 z00190171 2011/12/13 modify for front control touchKey leds begin
+#DTS2011120302674    z00190171   2011/12/03  add for sensors update version.I end
+#<DTS2011121301877 z00190171 2011/12/13 modify for front control touchKey leds begin
     chown system system /sys/class/leds/button-backlight-tk/brightness
-    #DTS2011121301877 z00190171 2011/12/13 modify for front control touchKey leds end>    #<DTS2011121404047 jKF31740 20111214 modify begin
+#DTS2011121301877 z00190171 2011/12/13 modify for front control touchKey leds end>
+#<DTS2011121404047 jKF31740 20111214 modify begin
     chown system system /sys/class/backlight/lcd/brightness
-    #DTS2011121404047 jKF31740 20111214 modify end>
-    #DTS2011120302674    z00190171   2011/12/03  add for sensors update version.I begin
+#DTS2011121404047 jKF31740 20111214 modify end>
+#DTS2011120302674    z00190171   2011/12/03  add for sensors update version.I begin
     chown system system /sys/devices/platform/i2c_omap.4/i2c-4/4-0012/leds/button-backlight-tk/brightness
 	chown system system /sys/devices/platform/i2c_omap.2/i2c-2/2-0012/leds/button-backlight-tk/brightness
     chown system system /sys/devices/platform/TK-backlight/leds/button-backlight-tk/brightness
-    #DTS2011120302674    z00190171   2011/12/03  add for sensors update version.I end
-    #<DTS2011121301877 z00190171 2011/12/13 modify for front control touchKey leds begin
+#DTS2011120302674    z00190171   2011/12/03  add for sensors update version.I end
+#<DTS2011121301877 z00190171 2011/12/13 modify for front control touchKey leds begin
     chown system system /sys/class/leds/button-backlight-tk/brightness
-    #DTS2011121301877 z00190171 2011/12/13 modify for front control touchKey leds end>
+#DTS2011121301877 z00190171 2011/12/13 modify for front control touchKey leds end>
 #DTS2011120302674    z00190171   2011/12/03  add for sensors update version.I begin
     chown system system /sys/bus/i2c/drivers/lis3dh_acc/4-0018/enable
     chown system system /sys/bus/i2c/drivers/lis3dh_acc/4-0018/pollrate_ms
@@ -150,10 +166,10 @@ on post-fs-data
     chown system system /sys/devices/platform/omap/omap_i2c.4/i2c-4/4-0045/leds/blue/delay_off
 #DTS2012021003349 wkf40768 20120210 leds set color yellow to orange end
 #DTS2012021007117 w00172421 2012/02/10  modify i2c node authority  begin
-    #led lightness
+#led lightness
     chmod 0664 /sys/devices/platform/omap/omap_i2c.3/i2c-3/3-0033/tps61310_led_lightness
     
-    #leds
+#leds
     chmod 0664 /sys/devices/platform/omap/omap_i2c.4/i2c-4/4-0045/leds/three_colors_led/delay_on
     chmod 0664 /sys/devices/platform/omap/omap_i2c.4/i2c-4/4-0045/leds/three_colors_led/delay_off
     chmod 0664 /sys/devices/platform/omap/omap_i2c.4/i2c-4/4-0045/leds/red/delay_on
@@ -162,11 +178,18 @@ on post-fs-data
     chmod 0664 /sys/devices/platform/omap/omap_i2c.4/i2c-4/4-0045/leds/green/delay_off
     chmod 0664 /sys/devices/platform/omap/omap_i2c.4/i2c-4/4-0045/leds/blue/delay_on
     chmod 0664 /sys/devices/platform/omap/omap_i2c.4/i2c-4/4-0045/leds/blue/delay_off
-    
-    #compass
+
+    chown system system /sys/class/leds/red/brightness
+    chown system system /sys/class/leds/green/brightness
+    chown system system /sys/class/leds/blue/brightness
+    chown system system /sys/class/leds/red/device/grpfreq
+    chown system system /sys/class/leds/red/device/grppwm
+    chown system system /sys/class/leds/red/device/blink
+
+#compass
     chmod 0664 /sys/devices/platform/omap/omap_i2c.4/i2c-4/4-000c/compass_info
     
-    #lis3dh
+#lis3dh
     chmod 0664 /sys/devices/platform/omap/omap_i2c.4/i2c-4/4-0018/pollrate_ms
     chmod 0664 /sys/devices/platform/omap/omap_i2c.4/i2c-4/4-0018/range
     chmod 0664 /sys/devices/platform/omap/omap_i2c.4/i2c-4/4-0018/enable
@@ -185,27 +208,36 @@ on post-fs-data
     chmod 0664 /sys/devices/platform/omap/omap_i2c.4/i2c-4/4-0018/reg_value
     chmod 0664 /sys/devices/platform/omap/omap_i2c.4/i2c-4/4-0018/reg_addr
     
-    #l3g4200d
+#l3g4200d
     chmod 0664 /sys/devices/platform/omap/omap_i2c.4/i2c-4/4-0068/pollrate_ms
     chmod 0664 /sys/devices/platform/omap/omap_i2c.4/i2c-4/4-0068/range
     chmod 0664 /sys/devices/platform/omap/omap_i2c.4/i2c-4/4-0068/enable_device
     chmod 0664 /sys/devices/platform/omap/omap_i2c.4/i2c-4/4-0068/enable_selftest
     
-    #sensor
+#sensor
     chmod 0664 /sys/devices/platform/omap/omap_i2c.4/i2c-4/4-0039/enable_als_sensor
     chmod 0664 /sys/devices/platform/omap/omap_i2c.4/i2c-4/4-0039/enable_ps_sensor
     
-    #battery
+#battery
     chmod 0664 /sys/bus/i2c/drivers/bq27510-battery/state
     chmod 0664 /sys/bus/i2c/drivers/bq27510-battery/gaugelog
         
 #DTS2012021007117 w00172421 2012/02/10  modify i2c node authority end
 
 #DTS2012011200528 l00178492 2012-1-12 begin >>>
-chown system system /dev/block/platform/omap/omap_hsmmc.1/by-name/oeminfo
-chmod 0660 /dev/block/platform/omap/omap_hsmmc.1/by-name/oeminfo
+    chown system system /dev/block/platform/omap/omap_hsmmc.1/by-name/oeminfo
+    chmod 0660 /dev/block/platform/omap/omap_hsmmc.1/by-name/oeminfo
 #DTS2012011200528 l00178492 2012-1-12 end <<<
 
+    chown system system /sys/class/android_usb/android0/f_mass_storage/lun/file
+    chmod 0660 /sys/class/android_usb/android0/f_mass_storage/lun/file
+    chown system system /sys/class/android_usb/android0/f_rndis/ethaddr
+    chmod 0660 /sys/class/android_usb/android0/f_rndis/ethaddr
+
+    chown system system /sys/class/android_usb/f_mass_storage/suitestate
+    chmod 0660 /sys/class/android_usb/f_mass_storage/suitestate
+    chown system system /sys/class/android_usb/android0/f_mass_storage/lun1/file
+    chmod 0660 /sys/class/android_usb/android0/f_mass_storage/lun1/file
 
 on boot
 	mount debugfs /sys/kernel/debug /sys/kernel/debug
@@ -218,7 +250,7 @@ on boot
 	chown system system /sys/devices/system/cpu/cpufreq/interactive/lpspeed_enabled
 	chown system system /sys/devices/omapdss/display0/cabc_mode
 	chown system system /sys/module/pvrsrvkm/parameters/sgx_freq_restrict
-	# DTS2012032406795 l00210892 20120326 begin
+# DTS2012032406795 l00210892 20120326 begin
 	chown system system /sys/devices/system/cpu/cpufreq/interactive/hispeed_freq
 	chown system system /sys/devices/system/cpu/cpufreq/interactive/go_hispeed_load
 # Boost the CPU for 30 secs during boot
@@ -237,25 +269,34 @@ on boot
     mkdir /data/misc/dhcp 0770 dhcp dhcp
     chown dhcp dhcp /data/misc/dhcp
 
+    write system system /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor ondemand
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq 1200000
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq 350000
+    chown system system /sys/block/mmcblk0/queue/scheduler
+    chmod 0664 /sys/block/mmcblk0/queue/scheduler
+
 # GPS
 	insmod /system/lib/modules/gps_drv.ko
 
+# allow system to modify ksm control files
+    chown root system /sys/kernel/mm/ksm/pages_to_scan
+    chmod 0664 /sys/kernel/mm/ksm/pages_to_scan
+    chown root system /sys/kernel/mm/ksm/sleep_millisecs
+    chmod 0664 /sys/kernel/mm/ksm/sleep_millisecs
+    chown root system /sys/kernel/mm/ksm/run
+    chmod 0664 /sys/kernel/mm/ksm/run
+    write /sys/kernel/mm/ksm/sleep_millisecs 1500
+    write /sys/kernel/mm/ksm/pages_to_scan 256
+
 on fs
-        mkdir /factory 0775 radio radio
-	mount ext4 /dev/block/platform/omap/omap_hsmmc.1/by-name/system /system wait 
+    mkdir /factory 0775 radio radio
+    mount_all ./fstab.front
+#	mount ext4 /dev/block/platform/omap/omap_hsmmc.1/by-name/system /system wait 
 	setprop ro.crypto.tmpfs_options size=128m,mode=0771,uid=1000,gid=1000
-	#DTS2011122804252 z00192785 2011-12-29 begin
-	mount ext4 /dev/block/platform/omap/omap_hsmmc.1/by-name/cust /cust wait ro
-	#DTS2011122804252 z00192785 2011-12-29 end
-        #DTS2012011102409  z00176770 20110112 begin
-        #DTS2012021007060  z00176770 20120210 begin
-        mount ext4 /dev/block/platform/omap/omap_hsmmc.1/by-name/userdata /data wait nosuid nodev mblk_io_submit,data=writeback,commit=15,barrier=0,noauto_da_alloc,discard
-        #DTS2012021007060  z00176770 20120210 end
-        #DTS2012011102409  z00176770 20110112 end
-	mount ext4 /dev/block/platform/omap/omap_hsmmc.1/by-name/cache /cache wait noatime nosuid nodev nomblk_io_submit
-#/*<start: DTS2011122703394 d00186307 kernel boot time optimize*/
-#	mount ext4 /dev/block/platform/omap/omap_hsmmc.1/by-name/efs /factory wait ro
-#/*<end: DTS2011122703394 d00186307 kernel boot time optimize >*/
+#	mount ext4 /dev/block/platform/omap/omap_hsmmc.1/by-name/cust /cust wait ro
+#    mount ext4 /dev/block/platform/omap/omap_hsmmc.1/by-name/userdata /data wait nosuid nodev mblk_io_submit,data=writeback,commit=15,barrier=0,noauto_da_alloc,discard
+#	mount ext4 /dev/block/platform/omap/omap_hsmmc.1/by-name/cache /cache wait noatime nosuid nodev nomblk_io_submit
+##	mount ext4 /dev/block/platform/omap/omap_hsmmc.1/by-name/efs /factory wait ro
 	setprop ro.crypto.fuse_sdcard true
 
 # H264 Encoder Profile setting
@@ -266,15 +307,15 @@ on fs
 # nvm
 #DTS2011102902318 	w00177577	2011/10/29	front add nvm1 nvm2 partition begin
 #DTS2011121307804    x00186570	2011/12/16   change for managing modem image begin
-	mount rootfs rootfs / rw remount
-	mkdir /modem
-	mkdir /modem/modem_image
-	mkdir /modem/nvm1
-	mkdir /modem/nvm2
-	mount ext4 /dev/block/platform/omap/omap_hsmmc.1/by-name/modemimage /modem/modem_image wait noatime nosuid nodev
-	mount ext4 /dev/block/platform/omap/omap_hsmmc.1/by-name/modemnvm1 /modem/nvm1 wait noatime nosuid nodev
-	mount ext4 /dev/block/platform/omap/omap_hsmmc.1/by-name/modemnvm2 /modem/nvm2 wait noatime nosuid nodev
-	mount rootfs rootfs / ro remount
+#	mount rootfs rootfs / rw remount
+#	mkdir /modem
+#	mkdir /modem/modem_image
+#	mkdir /modem/nvm1
+#	mkdir /modem/nvm2
+#	mount ext4 /dev/block/platform/omap/omap_hsmmc.1/by-name/modemimage /modem/modem_image wait noatime nosuid nodev
+#	mount ext4 /dev/block/platform/omap/omap_hsmmc.1/by-name/modemnvm1 /modem/nvm1 wait noatime nosuid nodev
+#	mount ext4 /dev/block/platform/omap/omap_hsmmc.1/by-name/modemnvm2 /modem/nvm2 wait noatime nosuid nodev
+#	mount rootfs rootfs / ro remount
 #DTS2011121307804    x00186570	2011/12/16   change for managing modem image end
 #DTS2011102902318 	w00177577	2011/10/29	front add nvm1 nvm2 partition end
 
@@ -694,5 +735,22 @@ service atcmdserver  /system/bin/atcmdserver
     class main
     user root
     oneshot
+
+service ril-daemon /system/bin/rild -l /system/lib/libxgold-ril.so -- -d /dev/xmd-tty0
+    class main
+    socket rild stream 660 root radio
+    socket rild-debug stream 660 radio system
+    user root
+    group radio cache inet misc audio sdcard_r sdcard_rw bluetooth log system
+
+service akmd8975  /system/bin/akmd8975 -m 3
+    class main
+    user system
+    oneshot
+
+service gpsd  /system/bin/glgps -c /system/etc/gpsconfig.xml
+    class main
+    user root
+    group system
 
 

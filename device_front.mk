@@ -54,13 +54,9 @@ PRODUCT_PACKAGES += \
 
 # Ramdisk
 PRODUCT_COPY_FILES += \
-	device/huawei/front/ramdisk/init:root/init \
-	device/huawei/front/ramdisk/init.rc:root/init.rc \
 	device/huawei/front/ramdisk/init.front.rc:root/init.front.rc \
 	device/huawei/front/ramdisk/init.front.usb.rc:root/init.front.usb.rc \
-	device/huawei/front/ramdisk/ueventd.rc:root/ueventd.rc \
 	device/huawei/front/ramdisk/ueventd.front.rc:root/ueventd.front.rc \
-	device/huawei/front/ramdisk/default.prop:root/default.prop \
 	device/huawei/front/ramdisk/fstab.front:root/fstab.front
 
 # Media / Audio
@@ -160,6 +156,9 @@ PRODUCT_PROPERTY_OVERRIDES += \
 	ro.setupwizard.enable_bypass=1 \
 	dalvik.vm.dexopt-flags=m=y \
 	ro.product.board=U9500
+
+PRODUCT_PROPERTY_OVERRIDES += \
+	persist.sys.usb.config=mtp,adb
 
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
 	ro.secure=0
