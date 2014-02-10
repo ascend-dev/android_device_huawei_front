@@ -116,6 +116,7 @@ ARCH_ARM_HAVE_32_BYTE_CACHE_LINES := true
 
 # RIL
 TARGET_PROVIDES_LIBRIL := vendor/huawei/front/proprietary/lib/libxgold-ril.so
+BOARD_RIL_NO_CELLINFOLIST := true
 
 # Webkit
 ENABLE_WEBGL := true
