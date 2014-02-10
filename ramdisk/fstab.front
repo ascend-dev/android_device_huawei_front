@@ -10,5 +10,5 @@
 /dev/block/platform/omap/omap_hsmmc.1/by-name/bootloader  /bootloader  emmc  defaults  none
 /dev/block/platform/omap/omap_hsmmc.1/by-name/xloader     /xloader     emmc  defaults  none
 
-/devices/platform/omap/omap_hsmmc.0/mmc_host/mmc1         auto     vfat      defaults  voldmanaged=sdcard:auto
-/devices/platform/omap/musb-omap2430/musb-hdrc/usb1       auto     vfat      defaults  voldmanaged=usbdisk:auto
+/devices/platform/omap/omap_hsmmc.0/mmc_host/mmc1         auto     vfat      defaults  voldmanaged=sdcard1:auto
+/devices/platform/omap/musb-omap2430/musb-hdrc/usb1       auto     vfat      defaults  voldmanaged=usbdisk0:auto
