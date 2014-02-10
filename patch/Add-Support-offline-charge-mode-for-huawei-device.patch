@@ -1,44 +1,22 @@
-From 549d33a6973c05902749d10770bd6d8f4f9eb8da Mon Sep 17 00:00:00 2001
-From: huangqiwu <huangqiwu@xiaomi.com>
-Date: Fri, 26 Jul 2013 11:10:21 +0800
-Subject: [PATCH] Add Support offline charge mode for huawei device
 
-Change-Id: Id8ea8e79fec3e47da3038e53e0a89bf22da83c77
----
- Android.mk            |  2 +-
- default_recovery_ui.c |  1 +
- recovery.c            | 66 ++++++++++++++++++++++++++++++++++++++++++++++++++-
- 3 files changed, 67 insertions(+), 2 deletions(-)
-
-diff --git a/Android.mk b/Android.mk
-index 2e0966f..2628eb5 100644
---- a/Android.mk
-+++ b/Android.mk
-@@ -59,7 +59,7 @@ BOARD_RECOVERY_CHAR_HEIGHT := $(shell echo $(BOARD_USE_CUSTOM_RECOVERY_FONT) | c
+project bootable/recovery/
+diff --git a/bootable/recovery/Android.mk b/bootable/recovery/Android.mk
+index 661a103..b0eb139 100644
+--- a/bootable/recovery/Android.mk
++++ b/bootable/recovery/Android.mk
+@@ -67,7 +67,7 @@ BOARD_RECOVERY_CHAR_HEIGHT := $(shell echo $(BOARD_USE_CUSTOM_RECOVERY_FONT) | c
  
  LOCAL_CFLAGS += -DBOARD_RECOVERY_CHAR_WIDTH=$(BOARD_RECOVERY_CHAR_WIDTH) -DBOARD_RECOVERY_CHAR_HEIGHT=$(BOARD_RECOVERY_CHAR_HEIGHT)
  
--BOARD_RECOVERY_DEFINES := BOARD_HAS_NO_SELECT_BUTTON BOARD_UMS_LUNFILE BOARD_RECOVERY_ALWAYS_WIPES BOARD_RECOVERY_HANDLES_MOUNT BOARD_TOUCH_RECOVERY RECOVERY_EXTEND_NANDROID_MENU TARGET_USE_CUSTOM_LUN_FILE_PATH TARGET_DEVICE
-+BOARD_RECOVERY_DEFINES := RECOVERY_CHARGEMODE BOARD_HAS_NO_SELECT_BUTTON BOARD_UMS_LUNFILE BOARD_RECOVERY_ALWAYS_WIPES BOARD_RECOVERY_HANDLES_MOUNT BOARD_TOUCH_RECOVERY RECOVERY_EXTEND_NANDROID_MENU TARGET_USE_CUSTOM_LUN_FILE_PATH TARGET_DEVICE
+-BOARD_RECOVERY_DEFINES := BOARD_RECOVERY_SWIPE BOARD_HAS_NO_SELECT_BUTTON BOARD_UMS_LUNFILE BOARD_RECOVERY_ALWAYS_WIPES BOARD_RECOVERY_HANDLES_MOUNT BOARD_TOUCH_RECOVERY RECOVERY_EXTEND_NANDROID_MENU TARGET_USE_CUSTOM_LUN_FILE_PATH TARGET_DEVICE TARGET_RECOVERY_FSTAB
++BOARD_RECOVERY_DEFINES := RECOVERY_CHARGEMODE BOARD_RECOVERY_SWIPE BOARD_HAS_NO_SELECT_BUTTON BOARD_UMS_LUNFILE BOARD_RECOVERY_ALWAYS_WIPES BOARD_RECOVERY_HANDLES_MOUNT BOARD_TOUCH_RECOVERY RECOVERY_EXTEND_NANDROID_MENU TARGET_USE_CUSTOM_LUN_FILE_PATH TARGET_DEVICE TARGET_RECOVERY_FSTAB
  
  $(foreach board_define,$(BOARD_RECOVERY_DEFINES), \
    $(if $($(board_define)), \
-diff --git a/default_recovery_ui.c b/default_recovery_ui.c
-index 032c1b3..631902d 100644
---- a/default_recovery_ui.c
-+++ b/default_recovery_ui.c
-@@ -29,6 +29,7 @@ char* MENU_ITEMS[] = { "reboot system now",
-                        "backup and restore",
-                        "mounts and storage",
-                        "advanced",
-+                       "power off",
-                        NULL };
- 
- void device_ui_init(UIParameters* ui_parameters) {
-diff --git a/recovery.c b/recovery.c
-index 8cfaa73..efa5ccf 100644
---- a/recovery.c
-+++ b/recovery.c
+diff --git a/bootable/recovery/recovery.c b/bootable/recovery/recovery.c
+index fcaf0a6..43852fb 100644
+--- a/bootable/recovery/recovery.c
++++ b/bootable/recovery/recovery.c
 @@ -35,6 +35,7 @@
  #include "common.h"
  #include "cutils/properties.h"
@@ -47,7 +25,7 @@ index 8cfaa73..efa5ccf 100644
  #include "install.h"
  #include "minui/minui.h"
  #include "minzip/DirUtil.h"
-@@ -151,6 +152,52 @@ fopen_path(const char *path, const char *mode) {
+@@ -158,6 +159,52 @@ fopen_path(const char *path, const char *mode) {
      if (fp == NULL && path != COMMAND_FILE) LOGE("Can't open %s\n", path);
      return fp;
  }
@@ -100,8 +78,8 @@ index 8cfaa73..efa5ccf 100644
  
  // close a file, log an error if the error indicator is set
  static void
-@@ -841,6 +888,11 @@ main(int argc, char **argv) {
-             return getprop_main(argc, argv);
+@@ -990,6 +1037,11 @@ main(int argc, char **argv) {
+         }
          return busybox_driver(argc, argv);
      }
 +
@@ -112,9 +90,9 @@ index 8cfaa73..efa5ccf 100644
      __system("/sbin/postrecoveryboot.sh");
  
      int is_user_initiated_recovery = 0;
-@@ -851,6 +903,15 @@ main(int argc, char **argv) {
+@@ -1000,6 +1052,15 @@ main(int argc, char **argv) {
      freopen(TEMPORARY_LOG_FILE, "a", stderr); setbuf(stderr, NULL);
-     printf("Starting recovery on %s", ctime(&start));
+     printf("Starting recovery on %s\n", ctime(&start));
  
 +#ifdef RECOVERY_CHARGEMODE
 +    int flag;
@@ -128,8 +106,8 @@ index 8cfaa73..efa5ccf 100644
      device_ui_init(&ui_parameters);
      ui_init();
      ui_print(EXPAND(RECOVERY_VERSION)"\n");
-@@ -1001,7 +1062,10 @@ main(int argc, char **argv) {
-     }
+@@ -1180,7 +1241,10 @@ main(int argc, char **argv) {
+ 
      return EXIT_SUCCESS;
  }
 -
@@ -140,6 +118,3 @@ index 8cfaa73..efa5ccf 100644
  int get_allow_toggle_display() {
      return allow_display_toggle;
  }
--- 
-1.8.1.2
-

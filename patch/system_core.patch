@@ -1,0 +1,61 @@
+
+project system/core/
+diff --git a/system/core/include/utils/CallStack.h b/system/core/include/utils/CallStack.h
+index 2056751..25703ab 100644
+--- a/system/core/include/utils/CallStack.h
++++ b/system/core/include/utils/CallStack.h
+@@ -73,6 +73,17 @@ public:
+              android_LogPriority priority = ANDROID_LOG_DEBUG,
+              const char* prefix = 0) const;
+ 
++    //Ivan, add back for old gralloc.default.so depend it.
++
++    // Immediately collect the stack traces for the specified thread.
++    // need to chagne frameworks/native/opengl/libs/EGL/trace.cpp:473
++    void update(int32_t ignoreDepth, int32_t maxDepth);
++
++    // Dump a stack trace to the log
++    void dump(const char* prefix = 0) const;
++
++    //Ivan, add back for old gralloc.default.so depend it, remove the default value.
++
+     // Dump a stack trace to the specified file descriptor.
+     void dump(int fd, int indent = 0, const char* prefix = 0) const;
+ 
+diff --git a/system/core/libutils/CallStack.cpp b/system/core/libutils/CallStack.cpp
+index 4ceaa7c..dbe76da 100644
+--- a/system/core/libutils/CallStack.cpp
++++ b/system/core/libutils/CallStack.cpp
+@@ -114,6 +114,32 @@ void CallStack::log(const char* logtag, android_LogPriority priority, const char
+     print(printer);
+ }
+ 
++//Ivan, add back for old gralloc.default.so depend it, start
++
++void CallStack::update(int32_t ignoreDepth, int32_t maxDepth) {
++    update(ignoreDepth, maxDepth, CURRENT_THREAD);
++/*
++    if (maxDepth > MAX_DEPTH) {
++        maxDepth = MAX_DEPTH;
++    }
++    ssize_t count = unwind_backtrace(mStack, ignoreDepth + 1, maxDepth);
++    mCount = count > 0 ? count : 0;*/
++}
++
++void CallStack::dump(const char* prefix) const {
++    backtrace_symbol_t symbols[mCount];
++
++    get_backtrace_symbols(mStack, mCount, symbols);
++    for (size_t i = 0; i < mCount; i++) {
++        char line[MAX_BACKTRACE_LINE_LENGTH];
++        format_backtrace_line(i, &mStack[i], &symbols[i],
++                line, MAX_BACKTRACE_LINE_LENGTH);
++        ALOGD("%s%s", prefix ? prefix : "", line);
++    }
++    free_backtrace_symbols(symbols, mCount);
++}
++//Ivan, add back for old gralloc.default.so depend it, end
++
+ void CallStack::dump(int fd, int indent, const char* prefix) const {
+     FdPrinter printer(fd, indent, prefix);
+     print(printer);
