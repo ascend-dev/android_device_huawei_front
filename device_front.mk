@@ -90,10 +90,6 @@ PRODUCT_COPY_FILES += \
 	device/huawei/front/bluetooth/input.conf:system/etc/bluetooth/input.conf \
 	device/huawei/front/bluetooth/network.conf:system/etc/bluetooth/network.conf
 
-# Vold
-PRODUCT_COPY_FILES += \
-	device/huawei/front/vold.fstab:system/etc/vold.fstab
-
 # Torch
 PRODUCT_PACKAGES += \
         Torch
