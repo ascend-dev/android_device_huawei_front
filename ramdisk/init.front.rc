@@ -57,6 +57,37 @@ on init
 
     setprop ro.hwboottype boot_android
 
+on fs
+    mkdir /factory 0775 radio radio
+    mount_all ./fstab.front
+#	mount ext4 /dev/block/platform/omap/omap_hsmmc.1/by-name/system /system wait 
+	setprop ro.crypto.tmpfs_options size=128m,mode=0771,uid=1000,gid=1000
+#	mount ext4 /dev/block/platform/omap/omap_hsmmc.1/by-name/cust /cust wait ro
+#    mount ext4 /dev/block/platform/omap/omap_hsmmc.1/by-name/userdata /data wait nosuid nodev mblk_io_submit,data=writeback,commit=15,barrier=0,noauto_da_alloc,discard
+#	mount ext4 /dev/block/platform/omap/omap_hsmmc.1/by-name/cache /cache wait noatime nosuid nodev nomblk_io_submit
+##	mount ext4 /dev/block/platform/omap/omap_hsmmc.1/by-name/efs /factory wait ro
+	setprop ro.crypto.fuse_sdcard true
+
+# H264 Encoder Profile setting
+# 1 - Base Profile
+# 2 - Main Profile
+# 8 - High Profile
+	setprop video.h264enc.profile 1
+# nvm
+#DTS2011102902318 	w00177577	2011/10/29	front add nvm1 nvm2 partition begin
+#DTS2011121307804    x00186570	2011/12/16   change for managing modem image begin
+	mount rootfs rootfs / rw remount
+	mkdir /modem
+	mkdir /modem/modem_image
+	mkdir /modem/nvm1
+	mkdir /modem/nvm2
+	mount ext4 /dev/block/platform/omap/omap_hsmmc.1/by-name/modemimage /modem/modem_image wait noatime nosuid nodev
+	mount ext4 /dev/block/platform/omap/omap_hsmmc.1/by-name/modemnvm1 /modem/nvm1 wait noatime nosuid nodev
+	mount ext4 /dev/block/platform/omap/omap_hsmmc.1/by-name/modemnvm2 /modem/nvm2 wait noatime nosuid nodev
+	mount rootfs rootfs / ro remount
+#DTS2011121307804    x00186570	2011/12/16   change for managing modem image end
+#DTS2011102902318 	w00177577	2011/10/29	front add nvm1 nvm2 partition end
+
 on post-fs
 	mount tmpfs tmpfs /mnt/secure private rec
 
@@ -288,37 +319,6 @@ on boot
     write /sys/kernel/mm/ksm/sleep_millisecs 1500
     write /sys/kernel/mm/ksm/pages_to_scan 256
 
-on fs
-    mkdir /factory 0775 radio radio
-    mount_all ./fstab.front
-#	mount ext4 /dev/block/platform/omap/omap_hsmmc.1/by-name/system /system wait 
-	setprop ro.crypto.tmpfs_options size=128m,mode=0771,uid=1000,gid=1000
-#	mount ext4 /dev/block/platform/omap/omap_hsmmc.1/by-name/cust /cust wait ro
-#    mount ext4 /dev/block/platform/omap/omap_hsmmc.1/by-name/userdata /data wait nosuid nodev mblk_io_submit,data=writeback,commit=15,barrier=0,noauto_da_alloc,discard
-#	mount ext4 /dev/block/platform/omap/omap_hsmmc.1/by-name/cache /cache wait noatime nosuid nodev nomblk_io_submit
-##	mount ext4 /dev/block/platform/omap/omap_hsmmc.1/by-name/efs /factory wait ro
-	setprop ro.crypto.fuse_sdcard true
-
-# H264 Encoder Profile setting
-# 1 - Base Profile
-# 2 - Main Profile
-# 8 - High Profile
-	setprop video.h264enc.profile 1
-# nvm
-#DTS2011102902318 	w00177577	2011/10/29	front add nvm1 nvm2 partition begin
-#DTS2011121307804    x00186570	2011/12/16   change for managing modem image begin
-#	mount rootfs rootfs / rw remount
-#	mkdir /modem
-#	mkdir /modem/modem_image
-#	mkdir /modem/nvm1
-#	mkdir /modem/nvm2
-#	mount ext4 /dev/block/platform/omap/omap_hsmmc.1/by-name/modemimage /modem/modem_image wait noatime nosuid nodev
-#	mount ext4 /dev/block/platform/omap/omap_hsmmc.1/by-name/modemnvm1 /modem/nvm1 wait noatime nosuid nodev
-#	mount ext4 /dev/block/platform/omap/omap_hsmmc.1/by-name/modemnvm2 /modem/nvm2 wait noatime nosuid nodev
-#	mount rootfs rootfs / ro remount
-#DTS2011121307804    x00186570	2011/12/16   change for managing modem image end
-#DTS2011102902318 	w00177577	2011/10/29	front add nvm1 nvm2 partition end
-
 # change permissions for ION driver
     chmod 0777 /dev/ion
 
@@ -326,32 +326,12 @@ on fs
 	chown radio radio /factory
 	chmod 0775 /factory
 
-    write /sys/class/android_usb/android0/enable 0
-    write /sys/class/android_usb/android0/idVendor 18d1
-    write /sys/class/android_usb/android0/idProduct D002
-    write /sys/class/android_usb/android0/functions ${sys.usb.config}
-    write /sys/class/android_usb/android0/enable 1
-    start adbd
-    setprop sys.usb.state ${sys.usb.config}
 # add symlink for HDCP key
         symlink /factory/hdcp.keys /system/vendor/firmware/hdcp.keys
 #<DTS2011120807567   y00197631    2011/12/08 begin
     chown media media /dev/audience_es305
     chown media media /dev/ttyO0
 #DTS2011120807567   y00197631    2011/12/08  end
-
-
-# This property trigger has added to imitiate the previous behavior of "adb root".
-# The adb gadget driver used to reset the USB bus when the adbd daemon exited,
-# and the host side adb relied on this behavior to force it to reconnect with the
-# new adbd instance after init relaunches it. So now we force the USB bus to reset
-# here when adbd sets the service.adb.root property to 1.  We also restart adbd here
-# rather than waiting for init to notice its death and restarting it so the timing
-# of USB resetting and adb restarting more closely matches the previous behavior.
-
-    write /sys/class/android_usb/android0/enable 0
-    restart adbd
-    write /sys/class/android_usb/android0/enable 1
 
 # add symlink for nxp noise-supression
     symlink /vendor/etc/nxp_front /data/nxp
