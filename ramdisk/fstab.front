@@ -1,7 +1,15 @@
-# Android fstab file.
-#<src>      <mnt_point>  <type>  <mnt_flags>            <fs_mgr_flags>
+# version 2
+# device        mount_point     fs_type        mount_flags       fs_mgr_flags
+/devices/platform/omap/omap_hsmmc.0/mmc_host/mmc1  /sdcard  vfat  defaults  voldmanaged=sdcard:auto
+/dev/block/platform/omap/omap_hsmmc.1/by-name/system      /system      ext4  defaults  none
+/dev/block/platform/omap/omap_hsmmc.1/by-name/cache       /cache       ext4  defaults  none
+/dev/block/platform/omap/omap_hsmmc.1/by-name/userdata    /data        ext4  defaults  none
+/dev/block/platform/omap/omap_hsmmc.1/by-name/misc        /misc        emmc  defaults  none
+/dev/block/platform/omap/omap_hsmmc.1/by-name/boot        /boot        emmc  defaults  none
+/dev/block/platform/omap/omap_hsmmc.1/by-name/recovery    /recovery    emmc  defaults  none
+/dev/block/platform/omap/omap_hsmmc.1/by-name/bootloader  /bootloader  emmc  defaults  none
+/dev/block/platform/omap/omap_hsmmc.1/by-name/xloader     /xloader     emmc  defaults  none
+/dev/block/platform/omap/omap_hsmmc.1/by-name/cust        /cust        ext4  defaults  none
 
-/dev/block/platform/omap/omap_hsmmc.1/by-name/system /system    ext4   ro,data=ordered,noauto_da_alloc wait
-/dev/block/platform/omap/omap_hsmmc.1/by-name/userdata /data      ext4   noatime,nosuid,nodev,data=orderd,noatuo_da_alloc,nomblk_io_submit wait
-/dev/block/platform/omap/omap_hsmmc.1/by-name/cache /cache     ext4   noatime,nosuid,nodev,data=orderd,noatuo_da_alloc,nomblk_io_submit,usedm,discard,nodelalloc wait
-/dev/block/platform/omap/omap_hsmmc.1/by-name/efs /factory     ext4   ro wait
+/devices/platform/omap/omap_hsmmc.0/mmc_host/mmc1         auto     vfat      defaults  voldmanaged=sdcard:auto
+/devices/platform/omap/musb-omap2430/musb-hdrc/usb1       auto     vfat      defaults  voldmanaged=usbdisk:auto
