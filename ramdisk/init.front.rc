@@ -49,53 +49,57 @@ on init
 on fs
     mkdir /factory 0775 radio radio
     mount_all ./fstab.front
-#	mount ext4 /dev/block/platform/omap/omap_hsmmc.1/by-name/system /system wait 
-	setprop ro.crypto.tmpfs_options size=128m,mode=0771,uid=1000,gid=1000
-#	mount ext4 /dev/block/platform/omap/omap_hsmmc.1/by-name/cust /cust wait ro
-#    mount ext4 /dev/block/platform/omap/omap_hsmmc.1/by-name/userdata /data wait nosuid nodev mblk_io_submit,data=writeback,commit=15,barrier=0,noauto_da_alloc,discard
-#	mount ext4 /dev/block/platform/omap/omap_hsmmc.1/by-name/cache /cache wait noatime nosuid nodev nomblk_io_submit
-##	mount ext4 /dev/block/platform/omap/omap_hsmmc.1/by-name/efs /factory wait ro
-	setprop ro.crypto.fuse_sdcard true
+    setprop ro.crypto.tmpfs_options size=128m,mode=0771,uid=1000,gid=1000
+    setprop ro.crypto.fuse_sdcard true
 
 # H264 Encoder Profile setting
 # 1 - Base Profile
 # 2 - Main Profile
 # 8 - High Profile
-	setprop video.h264enc.profile 1
+    setprop video.h264enc.profile 1
 # nvm
-#DTS2011102902318 	w00177577	2011/10/29	front add nvm1 nvm2 partition begin
-#DTS2011121307804    x00186570	2011/12/16   change for managing modem image begin
-	mount rootfs rootfs / rw remount
-	mkdir /modem
-	mkdir /modem/modem_image
-	mkdir /modem/nvm1
-	mkdir /modem/nvm2
-	mount ext4 /dev/block/platform/omap/omap_hsmmc.1/by-name/modemimage /modem/modem_image wait noatime nosuid nodev
-	mount ext4 /dev/block/platform/omap/omap_hsmmc.1/by-name/modemnvm1 /modem/nvm1 wait noatime nosuid nodev
-	mount ext4 /dev/block/platform/omap/omap_hsmmc.1/by-name/modemnvm2 /modem/nvm2 wait noatime nosuid nodev
-	mount rootfs rootfs / ro remount
-#DTS2011121307804    x00186570	2011/12/16   change for managing modem image end
-#DTS2011102902318 	w00177577	2011/10/29	front add nvm1 nvm2 partition end
+    mount rootfs rootfs / rw remount
+    mkdir /modem
+    mkdir /modem/modem_image
+    mkdir /modem/nvm1
+    mkdir /modem/nvm2
+    mount ext4 /dev/block/platform/omap/omap_hsmmc.1/by-name/modemimage /modem/modem_image wait noatime nosuid nodev
+    mount ext4 /dev/block/platform/omap/omap_hsmmc.1/by-name/modemnvm1 /modem/nvm1 wait noatime nosuid nodev
+    mount ext4 /dev/block/platform/omap/omap_hsmmc.1/by-name/modemnvm2 /modem/nvm2 wait noatime nosuid nodev
+    chmod 0660 /modem/modem_image/HWT6260.fls
+    chmod 0660 /modem/nvm1/calib.nvm
+    chmod 0660 /modem/nvm1/dynamic.nvm
+    chmod 0660 /modem/nvm1/static.nvm
+    chmod 0660 /modem/modem_image/HWT6260.fls.fls
+    chown radio radio /modem/nvm1
+    chown radio radio /modem/nvm2
+    chown radio radio /modem/modem_image
+    chown radio radio /modem/modem_image/HWT6260.fls
+    chown radio radio /modem/nvm1/calib.nvm
+    chown radio radio /modem/nvm1/dynamic.nvm
+    chown radio radio /modem/nvm1/static.nvm
+    chown radio radio /modem/modem_image/HWT6260.fls.fls
+    mount rootfs rootfs / ro remount
 
 on post-fs
-	mount tmpfs tmpfs /mnt/secure private rec
+    mount tmpfs tmpfs /mnt/secure private rec
 
 on post-fs-data
 
-	mkdir /data/share 0775 media_rw media_rw
-	mkdir /data/media 0775 media_rw media_rw
-	chown media_rw media_rw /data/share
-	mkdir /data/share/0 0775 media_rw media_rw
-	chown media_rw media_rw /data/share/0
-	mkdir /data/data/.helix 0771 media media
-	mkdir /data/smc 0770 drmrpc drmrpc
-	chown drmrpc drmrpc /data/smc/counter.bin
-	chown drmrpc drmrpc /data/smc/storage.bin
-	chown drmrpc drmrpc /data/smc/system.bin
-	mkdir /data/gps
+    mkdir /data/share 0775 media_rw media_rw
+    mkdir /data/media 0775 media_rw media_rw
+    chown media_rw media_rw /data/share
+    mkdir /data/share/0 0775 media_rw media_rw
+    chown media_rw media_rw /data/share/0
+    mkdir /data/data/.helix 0771 media media
+    mkdir /data/smc 0770 drmrpc drmrpc
+    chown drmrpc drmrpc /data/smc/counter.bin
+    chown drmrpc drmrpc /data/smc/storage.bin
+    chown drmrpc drmrpc /data/smc/system.bin
+    mkdir /data/gps
     chown root system /data/gps
 
-	setprop vold.post_fs_data_done 1
+    setprop vold.post_fs_data_done 1
 
     chown system system /sys/class/android_usb/android0/f_mass_storage/lun/file
     chmod 0660 /sys/class/android_usb/android0/f_mass_storage/lun/file
@@ -119,23 +123,20 @@ on post-fs-data
 # 5.0 %
     write /dev/cpuctl/bg_non_interactive/cpu.shares 52
 
-#<DTS2011121404047 jKF31740 20111214 modify begin
     chown system system /sys/class/backlight/lcd/brightness
-#DTS2011121404047 jKF31740 20111214 modify end>
-#DTS2011120302674    z00190171   2011/12/03  add for sensors update version.I begin
     chown system system /sys/devices/platform/i2c_omap.4/i2c-4/4-0012/leds/button-backlight-tk/brightness
-	chown system system /sys/devices/platform/i2c_omap.2/i2c-2/2-0012/leds/button-backlight-tk/brightness
+    chown system system /sys/devices/platform/i2c_omap.2/i2c-2/2-0012/leds/button-backlight-tk/brightness
     chown system system /sys/devices/platform/TK-backlight/leds/button-backlight-tk/brightness
-#DTS2011120302674    z00190171   2011/12/03  add for sensors update version.I end
-#<DTS2011121301877 z00190171 2011/12/13 modify for front control touchKey leds begin
+#add for sensors update version.I end
+#modify for front control touchKey leds begin
     chown system system /sys/class/leds/button-backlight-tk/brightness
-#DTS2011121301877 z00190171 2011/12/13 modify for front control touchKey leds end>
-#<DTS2011121404047 jKF31740 20111214 modify begin
+#modify for front control touchKey leds end>
+#modify begin
     chown system system /sys/class/backlight/lcd/brightness
 #DTS2011121404047 jKF31740 20111214 modify end>
 #DTS2011120302674    z00190171   2011/12/03  add for sensors update version.I begin
     chown system system /sys/devices/platform/i2c_omap.4/i2c-4/4-0012/leds/button-backlight-tk/brightness
-	chown system system /sys/devices/platform/i2c_omap.2/i2c-2/2-0012/leds/button-backlight-tk/brightness
+    chown system system /sys/devices/platform/i2c_omap.2/i2c-2/2-0012/leds/button-backlight-tk/brightness
     chown system system /sys/devices/platform/TK-backlight/leds/button-backlight-tk/brightness
 #DTS2011120302674    z00190171   2011/12/03  add for sensors update version.I end
 #<DTS2011121301877 z00190171 2011/12/13 modify for front control touchKey leds begin
@@ -260,26 +261,26 @@ on post-fs-data
     chmod 0660 /sys/class/android_usb/android0/f_mass_storage/lun1/file
 
 on boot
-	mount debugfs /sys/kernel/debug /sys/kernel/debug
-	chmod 0666 /dev/pvrsrvkm
-	chmod 0444 /system/usr/keychars/omap4-keypad.kcm.bin
-	setprop ro.crypto.keyfile.userdata /dev/block/platform/omap/omap_hsmmc.1/by-name/crypto
+    mount debugfs /sys/kernel/debug /sys/kernel/debug
+    chmod 0666 /dev/pvrsrvkm
+    chmod 0444 /system/usr/keychars/omap4-keypad.kcm.bin
+    setprop ro.crypto.keyfile.userdata /dev/block/platform/omap/omap_hsmmc.1/by-name/crypto
 
-	chown system system /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
-	chown system system /sys/devices/system/cpu/cpufreq/interactive/lpspeed_freq
-	chown system system /sys/devices/system/cpu/cpufreq/interactive/lpspeed_enabled
-	chown system system /sys/devices/omapdss/display0/cabc_mode
-	chown system system /sys/module/pvrsrvkm/parameters/sgx_freq_restrict
+    chown system system /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+    chown system system /sys/devices/system/cpu/cpufreq/interactive/lpspeed_freq
+    chown system system /sys/devices/system/cpu/cpufreq/interactive/lpspeed_enabled
+    chown system system /sys/devices/omapdss/display0/cabc_mode
+    chown system system /sys/module/pvrsrvkm/parameters/sgx_freq_restrict
 # DTS2012032406795 l00210892 20120326 begin
-	chown system system /sys/devices/system/cpu/cpufreq/interactive/hispeed_freq
-	chown system system /sys/devices/system/cpu/cpufreq/interactive/go_hispeed_load
+    chown system system /sys/devices/system/cpu/cpufreq/interactive/hispeed_freq
+    chown system system /sys/devices/system/cpu/cpufreq/interactive/go_hispeed_load
 # Boost the CPU for 30 secs during boot
-	write /sys/devices/system/cpu/cpufreq/interactive/boost_timeout 30000000
-	write /sys/devices/system/cpu/cpu0/cpufreq/boost_cpufreq 1
+    write /sys/devices/system/cpu/cpufreq/interactive/boost_timeout 30000000
+    write /sys/devices/system/cpu/cpu0/cpufreq/boost_cpufreq 1
 
 # autosuspend root hubs immediatly after attached devices
-	write /sys/bus/usb/devices/usb1/power/autosuspend_delay_ms 0
-	write /sys/bus/usb/devices/usb2/power/autosuspend_delay_ms 0
+    write /sys/bus/usb/devices/usb1/power/autosuspend_delay_ms 0
+    write /sys/bus/usb/devices/usb2/power/autosuspend_delay_ms 0
 
     mkdir /data/misc/wifi 0770 wifi wifi
     chown wifi wifi /data/misc/wifi
@@ -296,7 +297,7 @@ on boot
     chmod 0664 /sys/block/mmcblk0/queue/scheduler
 
 # GPS
-	insmod /system/lib/modules/gps_drv.ko
+    insmod /system/lib/modules/gps_drv.ko
 
 # allow system to modify ksm control files
     chown root system /sys/kernel/mm/ksm/pages_to_scan
@@ -312,11 +313,11 @@ on boot
     chmod 0777 /dev/ion
 
 # We chown/chmod /factory because mount is run as root + defaults
-	chown radio radio /factory
-	chmod 0775 /factory
+    chown radio radio /factory
+    chmod 0775 /factory
 
 # add symlink for HDCP key
-        symlink /factory/hdcp.keys /system/vendor/firmware/hdcp.keys
+    symlink /factory/hdcp.keys /system/vendor/firmware/hdcp.keys
 #<DTS2011120807567   y00197631    2011/12/08 begin
     chown media media /dev/audience_es305
     chown media media /dev/ttyO0
@@ -326,46 +327,14 @@ on boot
     symlink /vendor/etc/nxp_front /data/nxp
 
 
-# /* DTS2011081605546 y00185015 Added begin for xgold-ril configuration  */
-# change permissions for modem
-    chmod 0660 /dev/xmd-tty0
-    chmod 0660 /dev/xmd-tty1
-    chmod 0660 /dev/xmd-tty2
-    chmod 0660 /dev/xmd-tty3
-    chmod 0660 /dev/xmd-tty4
-    chmod 0660 /dev/xmd-tty5
-    chmod 0660 /dev/xmd-tty6
-    chmod 0660 /dev/xmd-tty7
-    chmod 0660 /dev/xmd-tty8
-    chmod 0660 /dev/xmd-tty9
-    chmod 0660 /dev/xmd-tty10
-    chmod 0660 /dev/xmd-tty11
-#    chmod 0660 /dev/xmd-tty*
-
-    chown radio radio /dev/xmd-tty0
-    chown radio radio /dev/xmd-tty1
-    chown radio radio /dev/xmd-tty2
-    chown radio radio /dev/xmd-tty3
-    chown radio radio /dev/xmd-tty4
-    chown system system /dev/xmd-tty5
-    chown system system /dev/xmd-tty6
-    chown radio radio /dev/xmd-tty7
-    chown radio radio /dev/xmd-tty8
-    chown media media /dev/xmd-tty8
-    chown radio radio /dev/xmd-tty9
-    chown radio radio /dev/xmd-tty10
-    chown radio radio /dev/xmd-tty11
     chmod 0664 /sys/devices/platform/xmm_boot/state
     chmod 0660 /sys/devices/platform/xmm_boot/io
     chmod 0660 /sys/devices/platform/xmm_boot/power
     chown radio radio /sys/devices/platform/xmm_boot/state
     chown radio radio /sys/devices/platform/xmm_boot/io
     chown radio radio /sys/devices/platform/xmm_boot/power
-# /* DTS2011081605546 y00185015 Added end for xgold-ril configuration */
-# /* DTS2012022304490 j00174217 20120326 add begin */
     chmod 0660 /sys/devices/platform/xmm_boot/cp_shutdown
     chown radio radio /sys/devices/platform/xmm_boot/cp_shutdown
-# /* DTS2012022304490 j00174217 20120326 add begin */
 
 # change permissions for bq2416x_charger
      chmod 0660 /sys/bus/i2c/devices/1-006b/enable_charger
@@ -373,32 +342,9 @@ on boot
      chmod 0660 /sys/bus/i2c/devices/1-006b/calling_limit
      chown system system /sys/bus/i2c/devices/1-006b/calling_limit
 
-#DTS2011102902318 	w00177577	2011/10/29	front add nvm1 nvm2 partition begin
-#DTS2011121307804    x00186570	2011/12/16   change for managing modem image begin
-    chmod 0660 /modem/modem_image/HWT6260.fls
-    chmod 0660 /modem/nvm1/calib.nvm
-    chmod 0660 /modem/nvm1/dynamic.nvm
-    chmod 0660 /modem/nvm1/static.nvm
-    chmod 0660 /modem/modem_image/HWT6260.fls.fls
-
-    chown radio radio /modem/nvm1
-    chown radio radio /modem/nvm2
-    chown radio radio /modem/modem_image
-    chown radio radio /modem/modem_image/HWT6260.fls
-    chown radio radio /modem/nvm1/calib.nvm
-    chown radio radio /modem/nvm1/dynamic.nvm
-    chown radio radio /modem/nvm1/static.nvm
-    chown radio radio /modem/modem_image/HWT6260.fls.fls
-#DTS2011121307804    x00186570	2011/12/16   change for managing modem image end
-#DTS2011102902318 	w00177577	2011/10/29	front add nvm1 nvm2 partition end
-
 # /* DTS2011081602280 x00186570 20110826 change the permissions for flashless download app */
     chmod 0660 /sys/devices/virtual/usbswitch/usbsw/swstate
     chown system system /sys/devices/virtual/usbswitch/usbsw/swstate
-    chmod 0660 /dev/ttyO0
-    chown radio radio /dev/ttyO0
-    chmod 0660 /dev/xmd-boot0
-    chown radio radio /dev/xmd-boot0
 
     chmod 0660 /sys/devices/platform/xmm_boot/flashless
     chmod 0660 /sys/devices/platform/xmm_boot/hsimode
