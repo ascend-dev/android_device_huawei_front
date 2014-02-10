@@ -73,14 +73,9 @@ PRODUCT_COPY_FILES += \
 
 # BT
 PRODUCT_COPY_FILES += \
-	device/huawei/front/bluetooth/audio.conf:system/etc/bluetooth/audio.conf \
-	device/huawei/front/bluetooth/auto_pairing.conf:system/etc/bluetooth/auto_pairing.conf \
 	device/huawei/front/bluetooth/BCM4330B1.hcd:system/etc/bluetooth/BCM4330B1.hcd \
-	device/huawei/front/bluetooth/blacklist.conf:system/etc/bluetooth/blacklist.conf \
 	device/huawei/front/bluetooth/init.bcm.chip_off.sh:system/etc/bluetooth/init.bcm.chip_off.sh \
-	device/huawei/front/bluetooth/init.bcm.chip_on.sh:system/etc/bluetooth/init.bcm.chip_on.sh \
-	device/huawei/front/bluetooth/input.conf:system/etc/bluetooth/input.conf \
-	device/huawei/front/bluetooth/network.conf:system/etc/bluetooth/network.conf
+	device/huawei/front/bluetooth/init.bcm.chip_on.sh:system/etc/bluetooth/init.bcm.chip_on.sh
 
 # Wi-Fi
 PRODUCT_COPY_FILES += \
