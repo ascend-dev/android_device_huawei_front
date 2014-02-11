@@ -39,9 +39,9 @@
 #include <sys/ioctl.h>
 #include <gcx.h>
 #include <gcioctl.h>
-#include "bltsville.h"
-#include "bvinternal.h"
-#include "bverror.h"
+#include <bltsville.h>
+#include <bvinternal.h>
+#include <bverror.h>
 
 #define GC_DEV_NAME	"gc2duser"
 

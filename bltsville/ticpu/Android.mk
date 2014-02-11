@@ -18,13 +18,12 @@ LOCAL_PATH := $(call my-dir)
 
 #Copying libbltsville_ticpu.BV_CPUVERSION.so
 include $(CLEAR_VARS)
-#BV_CPUVERSION :=$(shell ls $(DEVICE_FOLDER)/bltsville/ticpu/lib/android/libbltsville_*.*.so|\
-#             sed 's/device\/samsung\/omap4-common\/bltsville\/ticpu\/lib\/android\/libbltsville_ticpu.//')
-BV_CPUVERSION = "2.1.0.0.so"
+BV_CPUVERSION :=$(shell ls $(COMMON_PATH)/bltsville/ticpu/lib/android/libbltsville_*.*.so|\
+             sed 's/device\/huawei\/front\/bltsville\/ticpu\/lib\/android\/libbltsville_ticpu.//')
 LOCAL_MODULE_TAGS := optional
 LOCAL_MODULE_CLASS := SHARED_LIBRARIES
-LOCAL_MODULE := libbltsville_ticpu.2.1.0.0.so
-LOCAL_SRC_FILES := lib/android/libbltsville_ticpu.2.1.0.0.so
+LOCAL_MODULE := libbltsville_ticpu.$(BV_CPUVERSION)
+LOCAL_SRC_FILES := lib/android/libbltsville_ticpu.$(BV_CPUVERSION)
 LOCAL_MODULE_PATH:= $(TARGET_OUT_VENDOR)/lib
 include $(BUILD_PREBUILT)
 
@@ -38,7 +37,7 @@ $(SYMLINKS): $(LOCAL_INSTALLED_MODULE) $(LOCAL_PATH)/Android.mk
 	@mkdir -p $(dir $@)
 	@rm -rf $@
 	$(hide) ln -fs $(TICPU_BINARY) $@
-	@cp -afr $(DEVICE_FOLDER)/bltsville/ticpu/lib/android/libbltsville_ticpu_license.txt $(TARGET_OUT_VENDOR)/lib
+	@cp -afr $(COMMON_PATH)/bltsville/ticpu/lib/android/libbltsville_ticpu_license.txt $(TARGET_OUT_VENDOR)/lib
 ALL_DEFAULT_INSTALLED_MODULES += $(SYMLINKS)
 
 SYMLINKS1 := $(TARGET_OUT_VENDOR)/lib/libbltsville_cpu.so
