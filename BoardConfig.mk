@@ -203,8 +203,5 @@ TW_CUSTOM_BATTERY_PATH := /sys/class/power_supply/Battery
 TW_SDEXT_NO_EXT4 := true
 # End TWRP
 
-#Recovery
-USE_SET_METADATA := false
-
 # inherit from the proprietary version
 -include vendor/huawei/front/BoardConfigVendor.mk
