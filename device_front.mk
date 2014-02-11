@@ -80,9 +80,9 @@ PRODUCT_COPY_FILES += \
 
 # BT
 PRODUCT_COPY_FILES += \
-	device/huawei/front/bluetooth/BCM4330B1.hcd:system/etc/bluetooth/BCM4330B1.hcd \
-	device/huawei/front/bluetooth/init.bcm.chip_off.sh:system/etc/bluetooth/init.bcm.chip_off.sh \
-	device/huawei/front/bluetooth/init.bcm.chip_on.sh:system/etc/bluetooth/init.bcm.chip_on.sh
+	device/huawei/front/config/BCM4330B1.hcd:system/etc/bluetooth/BCM4330B1.hcd \
+	device/huawei/front/config/init.bcm.chip_off.sh:system/etc/bluetooth/init.bcm.chip_off.sh \
+	device/huawei/front/config/init.bcm.chip_on.sh:system/etc/bluetooth/init.bcm.chip_on.sh
 
 # Wi-Fi
 PRODUCT_COPY_FILES += \
