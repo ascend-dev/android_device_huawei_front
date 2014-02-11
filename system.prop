@@ -28,6 +28,7 @@ ro.bq.gpu_to_cpu_unsupported=1
 audioril.lib=libhuawei-audio-ril.so
 modem.audio=1
 com.ti.omap_enhancement=true
+omap.enhancement=true
 dolby.audio.hdmi.channels=0
 
 ro.config.fm_type=libbcmfm_if
