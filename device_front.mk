@@ -49,7 +49,11 @@ PRODUCT_PACKAGES += \
 	audio.primary.front \
 	power.front \
 	hwcomposer.front \
-	libion_ti
+	libedid \
+	libion_ti \
+	libstagefrighthw \
+	smc_pa_ctrl \
+	tf_daemon
 
 # Ramdisk
 PRODUCT_COPY_FILES += \
