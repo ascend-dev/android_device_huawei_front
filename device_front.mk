@@ -41,6 +41,9 @@ PRODUCT_PACKAGES += \
 	tinyplay \
 	libaudioutils
 
+PRODUCT_PACKAGES += \
+    libnetcmdiface
+
 # PowerHAL
 PRODUCT_PACKAGES += \
 	audio.primary.front \
