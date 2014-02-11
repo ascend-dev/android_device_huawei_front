@@ -105,3 +105,4 @@ drm.service.enabled=false
 media.aac_51_output_enabled=true
 hwui.render_dirty_regions=true
 wifi.interface=wlan0
+persist.sys.root_access=3
