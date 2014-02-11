@@ -38,6 +38,7 @@ __BEGIN_DECLS
 #define HWC_DEVICE_API_VERSION_1_0  HARDWARE_DEVICE_API_VERSION_2(1, 0, HWC_HEADER_VERSION)
 #define HWC_DEVICE_API_VERSION_1_1  HARDWARE_DEVICE_API_VERSION_2(1, 1, HWC_HEADER_VERSION)
 #define HWC_DEVICE_API_VERSION_1_2  HARDWARE_DEVICE_API_VERSION_2(1, 2, HWC_HEADER_VERSION)
+#define HWC_DEVICE_API_VERSION_1_3  HARDWARE_DEVICE_API_VERSION_2(1, 3, HWC_HEADER_VERSION)
 
 enum {
     /* hwc_composer_device_t::set failed in EGL */
@@ -78,6 +79,7 @@ enum {
      * by SurfaceFlinger (just as if compositionType was set to HWC_OVERLAY).
      */
     HWC_SKIP_LAYER = 0x00000001,
+    HWC_SCREENSHOT_ANIMATOR_LAYER = 0x00000002,
 };
 
 /*
@@ -182,19 +184,24 @@ enum {
 
 /* Allowed events for hwc_methods::eventControl() */
 enum {
-    HWC_EVENT_VSYNC     = 0
+    HWC_EVENT_VSYNC     = 0,
+    HWC_EVENT_ORIENTATION,    // To notify HWC about the device orientation
 };
 
 /* Display types and associated mask bits. */
 enum {
     HWC_DISPLAY_PRIMARY     = 0,
     HWC_DISPLAY_EXTERNAL    = 1,    // HDMI, DP, etc.
-    HWC_NUM_DISPLAY_TYPES
+    HWC_DISPLAY_VIRTUAL     = 2,
+
+    HWC_NUM_PHYSICAL_DISPLAY_TYPES = 2,
+    HWC_NUM_DISPLAY_TYPES          = 3,
 };
 
 enum {
     HWC_DISPLAY_PRIMARY_BIT     = 1 << HWC_DISPLAY_PRIMARY,
     HWC_DISPLAY_EXTERNAL_BIT    = 1 << HWC_DISPLAY_EXTERNAL,
+    HWC_DISPLAY_VIRTUAL_BIT     = 1 << HWC_DISPLAY_VIRTUAL,
 };
 
 /*****************************************************************************/
