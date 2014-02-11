@@ -78,6 +78,9 @@ TARGET_HAS_WAITFORVSYNC := true
 # Setup custom omap4xxx defines
 BOARD_USE_CUSTOM_LIBION := true
 
+# No sync framework for this device...
+TARGET_RUNNING_WITHOUT_SYNC_FRAMEWORK := true
+
 # Kernel/Ramdisk
 BOARD_KERNEL_CMDLINE := console=ttyGS2,115200n8 mem=1G vmalloc=768M vram=16M omapfb.vram=0:8M omap_wdt.timer_margin=30 mmcparts=mmcblk0:p15(splash) androidboot.hardware=front
 BOARD_KERNEL_BASE := 0x80000000
