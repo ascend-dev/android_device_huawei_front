@@ -242,4 +242,7 @@
         <item>0</item>
     </integer-array>
 
+    <!-- Enable translucent lockscreen-->
+    <bool name="config_enableLockScreenTranslucentDecor">true</bool>
+
 </resources>
