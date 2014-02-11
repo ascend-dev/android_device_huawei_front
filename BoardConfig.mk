@@ -16,6 +16,10 @@
 # limitations under the License.
 #
 
+# Include path
+TARGET_SPECIFIC_HEADER_PATH := device/huawei/front/include
+PRODUCT_VENDOR_KERNEL_HEADERS := device/huawei/front/kernel-headers
+
 # Camera
 USE_CAMERA_STUB := false
 BOARD_USES_TI_CAMERA_HAL := true
