@@ -96,6 +96,7 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
 	make_ext4fs \
 	setup_fs \
+	e2fsck \
 	l2ping \
 	com.android.future.usb.accessory
 
@@ -136,12 +137,6 @@ packages/wallpapers/LivePicker/android.software.live_wallpaper.xml:system/etc/pe
 PRODUCT_PACKAGES += \
 	librs_jni \
 	com.android.future.usb.accessory
-
-# Filesystem management tools
-PRODUCT_PACKAGES += \
-	make_ext4fs \
-	e2fsck \
-	setup_fs
 
 #Lib Skia test
 PRODUCT_PACKAGES += \
