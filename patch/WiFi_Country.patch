@@ -1,0 +1,19 @@
+
+project frameworks/opt/telephony/
+diff --git a/frameworks/opt/telephony/src/java/com/android/internal/telephony/MccTable.java b/frameworks/opt/telephony/src/java/com/android/internal/telephony/MccTable.java
+index c57a8c4..943bc62 100644
+--- a/frameworks/opt/telephony/src/java/com/android/internal/telephony/MccTable.java
++++ b/frameworks/opt/telephony/src/java/com/android/internal/telephony/MccTable.java
+@@ -187,11 +187,7 @@ public final class MccTable
+             Slog.d(LOG_TAG, "updateMccMncConfiguration: mcc=" + mcc + ", mnc=" + mnc);
+ 
+             Locale locale = null;
+-            if (mcc != 0) {
+-                setTimezoneFromMccIfNeeded(context, mcc);
+-                locale = getLocaleFromMcc(context, mcc);
+-                setWifiCountryCodeFromMcc(context, mcc);
+-            }
++
+             try {
+                 Configuration config = new Configuration();
+                 boolean updateConfig = false;
