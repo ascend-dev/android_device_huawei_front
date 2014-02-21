@@ -1,0 +1,15 @@
+
+project frameworks/av/
+diff --git a/frameworks/av/media/libmedia/AudioRecord.cpp b/frameworks/av/media/libmedia/AudioRecord.cpp
+index a5f71b7..4a66755 100644
+--- a/frameworks/av/media/libmedia/AudioRecord.cpp
++++ b/frameworks/av/media/libmedia/AudioRecord.cpp
+@@ -176,7 +176,7 @@ status_t AudioRecord::set(
+         return INVALID_OPERATION;
+     }
+ 
+-    if (inputSource == AUDIO_SOURCE_DEFAULT) {
++    if (inputSource == AUDIO_SOURCE_DEFAULT || inputSource == AUDIO_SOURCE_CAMCORDER) {
+         inputSource = AUDIO_SOURCE_MIC;
+     }
+     mInputSource = inputSource;
