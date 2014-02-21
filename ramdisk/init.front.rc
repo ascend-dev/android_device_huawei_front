@@ -30,7 +30,7 @@ on init
 
 	mkdir /cust
 # Create private mountpoint so we can MS_MOVE from staging
-    mount tmpfs tmpfs /mnt/secure mode=0700,uid=0,gid=0
+#    mount tmpfs tmpfs /mnt/secure mode=0700,uid=0,gid=0
 
     write /sys/module/block2mtd/parameters/block2mtd /dev/block/platform/omap/omap_hsmmc.1/by-name/nvme
 
@@ -82,7 +82,7 @@ on fs
     mount rootfs rootfs / ro remount
 
 on post-fs
-    mount tmpfs tmpfs /mnt/secure private rec
+#    mount tmpfs tmpfs /mnt/secure private rec
 
 on post-fs-data
 
